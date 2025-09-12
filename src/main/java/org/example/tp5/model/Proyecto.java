@@ -2,8 +2,8 @@ package org.example.tp5.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "proyectos")
@@ -21,9 +21,8 @@ public class Proyecto {
 
     private LocalDate fechaFin;
 
-    // Aún no configuramos relaciones JPA. Mantenemos una lista de ids transitoria.
-    @Transient
-    private List<Long> empleados = new ArrayList<>();
+    @ManyToMany(mappedBy = "proyectos")
+    private Set<Empleado> empleados = new HashSet<>();
 
     public Proyecto() {
     }
@@ -76,11 +75,11 @@ public class Proyecto {
         this.fechaFin = fechaFin;
     }
 
-    public List<Long> getEmpleados() {
+    public Set<Empleado> getEmpleados() {
         return empleados;
     }
 
-    public void setEmpleados(List<Long> empleados) {
+    public void setEmpleados(Set<Empleado> empleados) {
         this.empleados = empleados;
     }
 }

@@ -16,9 +16,8 @@ public class Departamento {
 
     private String descripcion;
 
-    // Aún no configuramos relaciones JPA. Mantenemos una lista de ids transitoria.
-    @Transient
-    private List<Long> empleados = new ArrayList<>();
+    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<Empleado> empleados = new ArrayList<>();
 
     public Departamento() {
     }
@@ -53,11 +52,11 @@ public class Departamento {
         this.descripcion = descripcion;
     }
 
-    public List<Long> getEmpleados() {
+    public List<Empleado> getEmpleados() {
         return empleados;
     }
 
-    public void setEmpleados(List<Long> empleados) {
+    public void setEmpleados(List<Empleado> empleados) {
         this.empleados = empleados;
     }
 }
