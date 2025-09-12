@@ -3,6 +3,8 @@ package org.example.tp5.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "empleados")
@@ -22,13 +24,22 @@ public class Empleado {
 
     private BigDecimal salario;
 
-    // Nota: No configuramos relación JPA todavía. Usamos el id del departamento como campo simple.
-    private Long departamento;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "departamento_id")
+    private Departamento departamento;
+
+    @ManyToMany
+    @JoinTable(
+            name = "empleado_proyecto",
+            joinColumns = @JoinColumn(name = "empleado_id"),
+            inverseJoinColumns = @JoinColumn(name = "proyecto_id")
+    )
+    private Set<Proyecto> proyectos = new HashSet<>();
 
     public Empleado() {
     }
 
-    public Empleado(Long id, String nombre, String apellido, String email, LocalDate fechaContratacion, BigDecimal salario, Long departamento) {
+    public Empleado(Long id, String nombre, String apellido, String email, LocalDate fechaContratacion, BigDecimal salario, Departamento departamento) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -86,11 +97,19 @@ public class Empleado {
         this.salario = salario;
     }
 
-    public Long getDepartamento() {
+    public Departamento getDepartamento() {
         return departamento;
     }
 
-    public void setDepartamento(Long departamento) {
+    public void setDepartamento(Departamento departamento) {
         this.departamento = departamento;
+    }
+
+    public Set<Proyecto> getProyectos() {
+        return proyectos;
+    }
+
+    public void setProyectos(Set<Proyecto> proyectos) {
+        this.proyectos = proyectos;
     }
 }
