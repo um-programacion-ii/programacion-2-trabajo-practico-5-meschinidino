@@ -1,18 +1,42 @@
 services:
   mysql:
-    image: 'mysql:latest'
+    image: mysql:8.4
+    container_name: mysql-empleados
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      MYSQL_DATABASE: empleados_db
+      MYSQL_USER: empleados_user
+      MYSQL_PASSWORD: empleados_pass
+      MYSQL_ROOT_PASSWORD: rootpass
     ports:
-      - '3306'
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
+
   postgres:
-    image: 'postgres:latest'
+    image: postgres:16
+    container_name: postgres-empleados
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: empleados_db
+      POSTGRES_USER: empleados_user
+      POSTGRES_PASSWORD: empleados_pass
     ports:
-      - '5432'
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U empleados_user -d empleados_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  mysql_data:
+  postgres_data:
