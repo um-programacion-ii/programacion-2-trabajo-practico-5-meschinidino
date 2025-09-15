@@ -1062,3 +1062,111 @@ Cada archivo debe seguir este formato:
 ## 📝 Licencia
 
 Este trabajo es parte del curso de Programación II de Ingeniería en Informática. Uso educativo únicamente.
+
+
+---
+
+## 📚 Documentación de la API y Configuración (Resumen)
+
+Esta sección resume los endpoints disponibles, cómo acceder a la documentación interactiva, cómo ejecutar la app con distintos perfiles y cómo levantar las bases con Docker Compose.
+
+### Documentación interactiva (Swagger/OpenAPI)
+- UI: http://localhost:8080/swagger-ui.html
+- Especificación: http://localhost:8080/v3/api-docs
+
+Los controladores incluyen anotaciones OpenAPI (@Tag, @Operation) y comentarios Javadoc para cada endpoint.
+
+### Endpoints principales
+
+- Empleados (/api/empleados)
+  - GET /api/empleados
+  - GET /api/empleados/{id}
+  - POST /api/empleados
+  - PUT /api/empleados/{id}
+  - DELETE /api/empleados/{id}
+  - GET /api/empleados/departamento/{nombre}
+  - GET /api/empleados/salario?min=X&max=Y
+  - GET /api/empleados/email/{email}
+
+- Departamentos (/api/departamentos)
+  - GET /api/departamentos
+  - GET /api/departamentos/{id}
+  - POST /api/departamentos
+  - PUT /api/departamentos/{id}
+  - DELETE /api/departamentos/{id}
+
+- Proyectos (/api/proyectos)
+  - GET /api/proyectos
+  - GET /api/proyectos/{id}
+  - POST /api/proyectos
+  - PUT /api/proyectos/{id}
+  - DELETE /api/proyectos/{id}
+  - GET /api/proyectos/activos
+
+### Manejo de errores y validaciones
+- Validaciones: Bean Validation (anotaciones en entidades). Los @RequestBody están anotados con @Valid.
+- Errores HTTP: GlobalExceptionHandler mapea validaciones y errores de formato a 400, recursos no encontrados (IllegalArgumentException en servicios) a 404, y errores genéricos a 500. El formato de error es ApiError con: timestamp, status, error, message, path.
+
+### Perfiles de Spring
+- dev (default): H2 en memoria, DDL create-drop, consola H2 en /h2-console
+- mysql: requiere MySQL en localhost:3306 con credenciales del compose
+- postgres: requiere PostgreSQL en localhost:5432 con credenciales del compose
+
+Cómo ejecutar:
+- Maven plugin: mvn spring-boot:run -Dspring-boot.run.profiles=dev|mysql|postgres
+- Jar: java -jar target/GestionDeEmpleados-0.0.1-SNAPSHOT.jar --spring.profiles.active=mysql
+
+### Docker Compose (MySQL y PostgreSQL)
+Archivo: compose.yaml
+
+Servicios:
+- mysql (mysql:8.4)
+  - Puerto: 3306:3306
+  - DB/Usuario/Pass: empleados_db / empleados_user / empleados_pass
+  - Root pass: rootpass
+  - Volumen: mysql_data
+  - Healthcheck: mysqladmin ping
+
+- postgres (postgres:16)
+  - Puerto: 5432:5432
+  - DB/Usuario/Pass: empleados_db / empleados_user / empleados_pass
+  - Volumen: postgres_data
+  - Healthcheck: pg_isready
+
+Comandos útiles:
+```bash
+# Levantar en segundo plano
+docker compose up -d
+# Ver estado
+docker compose ps
+# Logs de un servicio
+docker compose logs -f mysql
+# Detener y mantener datos
+docker compose down
+# Detener y borrar volúmenes (limpieza total)
+docker compose down -v
+```
+
+### Probar rápidamente con curl
+```bash
+# Crear departamento
+curl -s -X POST localhost:8080/api/departamentos -H 'Content-Type: application/json' \
+ -d '{"nombre":"IT","descripcion":"Tecnologia"}'
+
+# Listar empleados
+curl -s localhost:8080/api/empleados | jq '.'
+```
+
+### Tests con diferentes bases
+- Por defecto los tests usan H2 (perfil dev).
+- Hay pruebas de repositorio específicas con perfiles mysql y postgres. Se ejecutan automáticamente, y contienen suposiciones para saltarse si el puerto de la DB no está disponible.
+
+Para forzar su ejecución:
+```bash
+# Asegúrate de tener las DBs levantadas primero
+docker compose up -d
+# Ejecutar test suite completa
+mvn -q -DskipTests=false test
+```
+
+Si no deseas ejecutar pruebas que dependan de Docker, puedes dejar apagados los contenedores; esos tests se omitirán automáticamente.
