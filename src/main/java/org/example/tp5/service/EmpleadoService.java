@@ -15,6 +15,7 @@ public interface EmpleadoService {
 
     // Consultas personalizadas requeridas en Etapa 2
     List<Empleado> buscarPorDepartamento(Long departamentoId);
+    List<Empleado> buscarPorDepartamentoNombre(String nombreDepartamento);
     List<Empleado> buscarPorRangoSalario(BigDecimal min, BigDecimal max);
     Optional<Empleado> buscarPorEmail(String email);
 }

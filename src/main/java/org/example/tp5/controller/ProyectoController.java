@@ -31,13 +31,13 @@ public class ProyectoController {
     }
 
     @PostMapping
-    public ResponseEntity<Proyecto> crear(@RequestBody Proyecto proyecto) {
+    public ResponseEntity<Proyecto> crear(@jakarta.validation.Valid @RequestBody Proyecto proyecto) {
         Proyecto creado = proyectoService.guardar(proyecto);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     @PutMapping("/{id}")
-    public Proyecto actualizar(@PathVariable Long id, @RequestBody Proyecto proyecto) {
+    public Proyecto actualizar(@PathVariable Long id, @jakarta.validation.Valid @RequestBody Proyecto proyecto) {
         return proyectoService.actualizar(id, proyecto);
     }
 

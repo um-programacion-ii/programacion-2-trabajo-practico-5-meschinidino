@@ -13,6 +13,9 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     // Buscar empleados por departamento (por id de departamento)
     List<Empleado> findByDepartamento_Id(Long departamentoId);
 
+    // Buscar empleados por departamento (por nombre de departamento)
+    List<Empleado> findByDepartamento_Nombre(String nombre);
+
     // Buscar empleados por rango de salario
     List<Empleado> findBySalarioBetween(BigDecimal min, BigDecimal max);
 

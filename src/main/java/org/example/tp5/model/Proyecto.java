@@ -13,8 +13,12 @@ public class Proyecto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    @jakarta.validation.constraints.NotBlank
     private String nombre;
 
+    @Column(length = 1000)
+    @jakarta.validation.constraints.Size(max = 1000)
     private String descripcion;
 
     private LocalDate fechaInicio;

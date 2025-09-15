@@ -12,8 +12,12 @@ public class Departamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100, unique = true)
+    @jakarta.validation.constraints.NotBlank
     private String nombre;
 
+    @Column(length = 500)
+    @jakarta.validation.constraints.Size(max = 500)
     private String descripcion;
 
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = false)

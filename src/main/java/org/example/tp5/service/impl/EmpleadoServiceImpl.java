@@ -62,6 +62,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
+    public List<Empleado> buscarPorDepartamentoNombre(String nombreDepartamento) {
+        return empleadoRepository.findByDepartamento_Nombre(nombreDepartamento);
+    }
+
+    @Override
     public List<Empleado> buscarPorRangoSalario(BigDecimal min, BigDecimal max) {
         return empleadoRepository.findBySalarioBetween(min, max);
     }
