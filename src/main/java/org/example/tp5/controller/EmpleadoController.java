@@ -32,13 +32,13 @@ public class EmpleadoController {
     }
 
     @PostMapping
-    public ResponseEntity<Empleado> crear(@RequestBody Empleado empleado) {
+    public ResponseEntity<Empleado> crear(@jakarta.validation.Valid @RequestBody Empleado empleado) {
         Empleado creado = empleadoService.guardar(empleado);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     @PutMapping("/{id}")
-    public Empleado actualizar(@PathVariable Long id, @RequestBody Empleado empleado) {
+    public Empleado actualizar(@PathVariable Long id, @jakarta.validation.Valid @RequestBody Empleado empleado) {
         return empleadoService.actualizar(id, empleado);
     }
 
@@ -49,9 +49,9 @@ public class EmpleadoController {
     }
 
     // Consultas personalizadas
-    @GetMapping("/departamento/{departamentoId}")
-    public List<Empleado> obtenerPorDepartamento(@PathVariable Long departamentoId) {
-        return empleadoService.buscarPorDepartamento(departamentoId);
+    @GetMapping("/departamento/{nombre}")
+    public List<Empleado> obtenerPorDepartamento(@PathVariable String nombre) {
+        return empleadoService.buscarPorDepartamentoNombre(nombre);
     }
 
     @GetMapping("/salario")

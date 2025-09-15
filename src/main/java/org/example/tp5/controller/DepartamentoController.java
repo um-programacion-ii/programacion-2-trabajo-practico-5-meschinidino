@@ -31,13 +31,13 @@ public class DepartamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Departamento> crear(@RequestBody Departamento departamento) {
+    public ResponseEntity<Departamento> crear(@jakarta.validation.Valid @RequestBody Departamento departamento) {
         Departamento creado = departamentoService.guardar(departamento);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     @PutMapping("/{id}")
-    public Departamento actualizar(@PathVariable Long id, @RequestBody Departamento departamento) {
+    public Departamento actualizar(@PathVariable Long id, @jakarta.validation.Valid @RequestBody Departamento departamento) {
         return departamentoService.actualizar(id, departamento);
     }
 

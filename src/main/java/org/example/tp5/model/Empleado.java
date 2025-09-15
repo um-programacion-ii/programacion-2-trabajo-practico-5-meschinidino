@@ -14,18 +14,32 @@ public class Empleado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    @jakarta.validation.constraints.NotBlank
     private String nombre;
 
+    @Column(nullable = false, length = 100)
+    @jakarta.validation.constraints.NotBlank
     private String apellido;
 
+    @Column(nullable = false, unique = true, length = 150)
+    @jakarta.validation.constraints.NotBlank
+    @jakarta.validation.constraints.Email
     private String email;
 
+    @Column(name = "fecha_contratacion", nullable = false)
+    @jakarta.validation.constraints.NotNull
+    @jakarta.validation.constraints.PastOrPresent
     private LocalDate fechaContratacion;
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    @jakarta.validation.constraints.NotNull
+    @jakarta.validation.constraints.PositiveOrZero
     private BigDecimal salario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departamento_id")
+    @JoinColumn(name = "departamento_id", nullable = false)
+    @jakarta.validation.constraints.NotNull
     private Departamento departamento;
 
     @ManyToMany
