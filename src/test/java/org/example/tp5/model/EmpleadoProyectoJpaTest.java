@@ -21,12 +21,19 @@ class EmpleadoProyectoJpaTest {
     @DisplayName("Un empleado puede estar en muchos proyectos y un proyecto puede tener muchos empleados")
     void manyToManyEmpleadoProyecto() {
         // given: un empleado y dos proyectos
+        // crear departamento requerido por @NotNull en Empleado.departamento
+        Departamento dep = new Departamento();
+        dep.setNombre("IT");
+        dep.setDescripcion("Tecnologia");
+        dep = em.persistFlushFind(dep);
+
         Empleado emp = new Empleado();
         emp.setNombre("Juan");
         emp.setApellido("Gomez");
         emp.setEmail("juan.gomez@example.com");
         emp.setFechaContratacion(LocalDate.of(2021, 6, 1));
         emp.setSalario(new BigDecimal("98765.43"));
+        emp.setDepartamento(dep);
         emp = em.persistFlushFind(emp);
 
         Proyecto p1 = new Proyecto();
